@@ -2,7 +2,7 @@ package com.carbonfive.todo.user;
 
 import java.util.List;
 
-import com.carbonfive.todo.exception.NotFoundException;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class UserController {
@@ -28,7 +29,7 @@ public class UserController {
     User user = service.findOne(id);
 
     if (user == null) {
-      throw new NotFoundException("user not found");
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found");
     }
 
     return user;
@@ -36,7 +37,7 @@ public class UserController {
 
   @PostMapping("/users")
   @ResponseStatus(HttpStatus.CREATED)
-  public User createUser(@RequestBody User user) {
+  public User createUser(@Valid @RequestBody User user) {
     service.save(user);
     return user;
   }
