@@ -26,6 +26,7 @@ public class SwaggerConfig {
 
   @Bean
   public Docket api() {
-    return new Docket(DocumentationType.SWAGGER_2).apiInfo(DEFAULT_API_INFO).produces(new HashSet<String>(Arrays.asList("application/json", "")));
+    return new Docket(DocumentationType.SWAGGER_2).apiInfo(DEFAULT_API_INFO)
+        .produces(new HashSet<String>(Arrays.asList("application/json", "")));
   }
 }

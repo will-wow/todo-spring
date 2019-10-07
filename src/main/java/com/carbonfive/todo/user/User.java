@@ -10,6 +10,8 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -27,18 +29,30 @@ public class User {
   @Past
   @ApiModelProperty(notes = "Should be in the past")
   private Date birthDate;
+  @JsonIgnore
+  private boolean admin;
 
   @OneToMany(mappedBy="user")
   private List<Post> posts;
 
+  // Required for Hibernate when there's a constructor
   protected User() {
   }
 
-  public User(Integer id, String name, Date birthdate) {
+  public User(Integer id, String name, Date birthdate, Boolean admin) {
     super();
     this.id = id;
     this.name = name;
     this.birthDate = birthdate;
+    this.admin = admin || false;
+  }
+
+  public boolean isAdmin() {
+    return admin;
+  }
+
+  public void setAdmin(boolean admin) {
+    this.admin = admin;
   }
 
   public Integer getId() {
