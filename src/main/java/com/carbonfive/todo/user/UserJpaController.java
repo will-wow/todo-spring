@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.carbonfive.todo.exception.NotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -22,6 +24,9 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserJpaController {
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private PostRepository postRepository;
 
   @GetMapping("/jpa/users")
   public List<User> getUsers() {
@@ -50,5 +55,31 @@ public class UserJpaController {
   @DeleteMapping("/jpa/users/{id}")
   public void deleteUser(@PathVariable int id) {
     userRepository.deleteById(id);
+  }
+
+  @GetMapping("/jpa/users/{id}/posts")
+  public List<Post> getPosts(@PathVariable int id) {
+    Optional<User> userOptional = userRepository.findById(id);
+
+    if (!userOptional.isPresent()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found");
+    }
+
+    return userOptional.get().getPosts();
+  }
+
+  @PostMapping("/jpa/users/{id}/posts")
+  @ResponseStatus(HttpStatus.CREATED)
+  public Post createPost(@PathVariable int id, @RequestBody Post post) {
+    Optional<User> userOptional = userRepository.findById(id);
+
+    if (!userOptional.isPresent()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found");
+    }
+
+    post.setUser(userOptional.get());
+    postRepository.save(post);
+
+    return post;
   }
 }
