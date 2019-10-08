@@ -29,6 +29,7 @@ public class User {
   @Past
   @ApiModelProperty(notes = "Should be in the past")
   private Date birthDate;
+
   @JsonIgnore
   private boolean admin;
 

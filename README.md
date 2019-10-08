@@ -45,6 +45,8 @@ mysql -u springuser --password --database todo_spring_dev
 
 **Seed DB**
 
+Do this after running the app, so it Hibernate will have created the tables.
+
 (there's probably a better way, `data.sql` is really for in-memory DBs)
 
 ```bash
